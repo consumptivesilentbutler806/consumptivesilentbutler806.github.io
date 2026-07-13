@@ -3,24 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The home of UTAS Motorsport</title>
+    <title>Welcome to the team</title>
     <style>
+        /* Base styles matching your current layout */
         body {
-            .lexend-deca-<uniquifier> {
-  font-family: "Lexend Deca", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: <weight>;
-  font-style: normal;
-                Font-alignment: top;
-}
+            font-family: Arial, sans-serif;
+            margin: 0;
             padding: 50px;
             background-color: #f4f4f9;
+            color: #333;
         }
-        h1 { color: #333; }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        /* Hamburger Menu Button */
+        .menu-btn {
+            font-size: 30px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            position: fixed;
+            top: 20px;
+            right: 30px;
+            z-index: 1001;
+            color: #333;
+        }
+
+        /* Side Panel Styling */
+        .side-panel {
+            height: 100%;
+            width: 250px;
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            right: -250px; /* Hidden by default off-screen to the right */
+            background-color: #111;
+            overflow-x: hidden;
+            transition: 0.3s ease; /* Smooth sliding animation */
+            padding-top: 60px;
+            box-shadow: -2px 0 5px rgba(0,0,0,0.5);
+        }
+
+        /* Side Panel Links */
+        .side-panel a {
+            padding: 15px 25px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #818181;
+            display: block;
+            transition: 0.2s;
+        }
+
+        /* Hover effect for links */
+        .side-panel a:hover {
+            color: #f1f1f1;
+            background-color: #222;
+        }
+
+        /* Close Button inside the panel */
+        .side-panel .close-btn {
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            font-size: 36px;
+            cursor: pointer;
+            color: #818181;
+        }
+
+        .side-panel .close-btn:hover {
+            color: #fff;
+        }
+
+        /* Class added by JavaScript to open the panel */
+        .side-panel.open {
+            right: 0;
+        }
     </style>
 </head>
 <body>
-    <h1>Welcome to the team</h1>
-    <p>Currently under construction.</p>
+
+    <!-- Menu Trigger Button -->
+    <button class="menu-btn" onclick="toggleNav()">☰</button>
+
+    <!-- Pop-out Side Panel -->
+    <div id="mySidepanel" class="side-panel">
+        <span class="close-btn" onclick="toggleNav()">&times;</span>
+        <a href="about.html">About the team</a>
+        <a href="departments.html">Departments</a>
+        <a href="sponsors.html">Sponsors</a>
+        <a href="timeline.html">Timeline</a>
+        <a href="contact.html">Contact us</a>
+    </div>
+
+    <!-- Main Content Area -->
+    <main>
+        <h1>Welcome to the team</h1>
+        <p>Currently under construction.</p>
+    </main>
+
+    <!-- JavaScript to handle opening and closing -->
+    <script>
+        function toggleNav() {
+            const panel = document.getElementById("mySidepanel");
+            panel.classList.toggle("open");
+        }
+    </script>
+
 </body>
 </html>
