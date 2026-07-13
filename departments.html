@@ -9,6 +9,39 @@
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
+     /* --- FIND THIS BLOCK IN YOUR DEPARTMENTS.HTML STYLE TAG --- */
+
+.dept-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+
+.dept-card { 
+    display: block;
+    text-decoration: none; /* Removes the default blue underline */
+    color: #ffffff;        /* Forces the text color to stay white instead of browser blue */
+    background: rgba(12, 14, 18, 0.4); 
+    border: 1px solid rgba(255, 255, 255, 0.05); 
+    padding: 30px; 
+    border-radius: 4px; 
+    backdrop-filter: blur(10px); 
+    transition: border-color 0.2s ease, transform 0.2s ease, background 0.2s ease; 
+}
+
+.dept-card:hover { 
+    border-color: #Da2e29; /* Smoothly highlights your team's red crimson on hover */
+    transform: translateY(-3px);
+    background: rgba(218, 46, 41, 0.02);
+}
+
+/* Ensure headings inside the link cards don't inherit weird states */
+.dept-title { 
+    font-size: 1.8rem; 
+    font-style: italic; 
+    text-transform: uppercase; 
+    margin: 0 0 15px 0; 
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1); 
+    padding-bottom: 10px; 
+    color: #ffffff;        /* Keeps headers crisp white */
+}
+        
         body {
             font-family: 'Oswald', Arial, sans-serif;
             margin: 0; padding: 0; background-color: #000000; color: #ffffff;
