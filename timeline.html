@@ -1,263 +1,112 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Timeline | Motorsport</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap" rel="stylesheet">
+// Timeline Test Variant: Horizontal Stratum
+// Configured for large, detached horizontal bands with intersection shadows and bottom luminance
+
+const timelineConfig = {
+  background: {
+    shapeOrientation: "horizontal",
+    minHeightCSS: "200px",
+    maxHeightCSS: "350px",
+    gapCSS: "100px",
+    touching: false
+  },
+  effects: {
+    shadows: {
+      enabled: true,
+      type: "intersection-drop",
+      blurRadius: "25px",
+      color: "rgba(0, 0, 0, 0.15)"
+    },
+    luminance: {
+      anchor: "bottom-viewport",
+      glowColor: "rgba(0, 220, 255, 0.2)",
+      edgeHighlight: "linear-gradient(to top, rgba(255,255,255,0.4), transparent)"
+    }
+  }
+};
+
+function initHorizontalTimeline() {
+  const container = document.querySelector('.timeline-bg-container');
+  
+  // 1. Generate the Large, Detached Horizontal Patterns
+  for (let i = 0; i < 10; i++) {
+    const band = document.createElement('div');
+    band.classList.add('hl-strat-band');
     
-    <style>
-        body {
-            font-family: 'Oswald', Arial, sans-serif;
-            margin: 0; padding: 0; background-color: #000000; color: #ffffff;
-            letter-spacing: 0.5px; min-height: 250vh; position: relative; overflow-x: hidden;
-        }
+    // Set large, variable heights and force gaps via margins so they don't touch
+    band.style.height = `calc(${timelineConfig.background.minHeightCSS} + ${Math.random() * 150}px)`;
+    band.style.marginBottom = timelineConfig.background.gapCSS;
+    band.style.position = 'relative';
+    band.style.width = '100%';
+    
+    container.appendChild(band);
+  }
+  
+  // 2. Setup Intersection Observer for Bottom Glow & Content Shadows
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px 0px 10% 0px', // Trigger just before hitting the bottom viewport
+    threshold: [0, 0.5, 1.0]
+  };
 
-        /* --- BACKGROUND LAYER FRAMEWORK --- */
-        .paddock-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: linear-gradient(135deg, #040507 0%, #000000 100%); z-index: -10; }
-        .glow-wash { position: fixed; bottom: -30%; right: -10%; width: 80vw; height: 80vh; background: radial-gradient(circle, rgba(218, 46, 41, 0.15) 0%, rgba(0, 0, 0, 0) 70%); z-index: -9; pointer-events: none; }
-        .geo-shard { position: fixed; top: 0; height: 100vh; pointer-events: none; will-change: transform, opacity; transition: transform 0.15s cubic-bezier(0.1, 0.8, 0.2, 1), opacity 0.15s linear; }
-        .shard-1 { right: 0; width: 65vw; background: rgba(218, 46, 41, 0.03); clip-path: polygon(45% 0%, 100% 0%, 90% 100%, 20% 100%); z-index: -8; }
-        .shard-2 { right: 8vw; width: 50vw; background: rgba(10, 11, 14, 0.8); border-left: 1px solid rgba(255, 255, 255, 0.02); clip-path: polygon(30% 0%, 100% 0%, 100% 100%, 10% 100%); z-index: -7; }
-        .shard-3 { right: 2vw; width: 42vw; background: linear-gradient(180deg, rgba(218, 46, 41, 0.1) 0%, rgba(0, 0, 0, 0) 80%); clip-path: polygon(15% 0%, 85% 0%, 100% 100%, 30% 100%); z-index: -6; }
-        .shard-4 { right: 0; width: 35vw; background: #07080a; border-left: 1px solid rgba(218, 46, 41, 0.1); clip-path: polygon(40% 0%, 100% 0%, 100% 100%, 0% 100%); z-index: -5; }
-        .shard-5 { right: 12vw; width: 20vw; background: linear-gradient(90deg, rgba(255, 255, 255, 0.01) 0%, rgba(218, 46, 41, 0.05) 100%); clip-path: polygon(0% 0%, 100% 0%, 60% 100%, 20% 100%); z-index: -4; }
-        .shard-6 { right: 0; width: 25vw; background: linear-gradient(180deg, rgba(218, 46, 41, 0.22) 0%, rgba(15, 3, 3, 0.6) 60%, rgba(0, 0, 0, 0.95) 100%); clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 5% 100%); backdrop-filter: brightness(0.95) contrast(1.05); z-index: -3; }
-        .shard-7 { right: -3vw; width: 18vw; background: rgba(5, 6, 8, 0.9); border-left: 1px solid rgba(255, 255, 255, 0.04); clip-path: polygon(45% 0%, 100% 0%, 80% 100%, 0% 100%); z-index: -2; }
-        .shard-8 { right: -8vw; width: 15vw; background: linear-gradient(90deg, rgba(218, 46, 41, 0.12) 0%, rgba(0, 0, 0, 0) 100%); clip-path: polygon(60% 0%, 100% 0%, 50% 100%, 0% 100%); z-index: -1; }
+  const effectObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      // Calculate proximity to the bottom of the page
+      const bounding = entry.boundingClientRect;
+      const viewportHeight = window.innerHeight;
+      
+      if (bounding.bottom >= viewportHeight - 150) {
+        // Activate bright spot luminance on the lowest visible bands
+        entry.target.classList.add('in-luminance-zone');
+        entry.target.style.backgroundElementHighlight = timelineConfig.effects.luminance.edgeHighlight;
+      } else {
+        entry.target.classList.remove('in-luminance-zone');
+      }
+    });
+  }, observerOptions);
 
-        /* --- STICKY NAV --- */
-        .top-navbar {
-            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
-            display: flex; justify-content: center; align-items: center; height: 70px;
-            background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        }
-        .nav-links { display: flex; gap: 20px; }
-        .nav-links a {
-            text-decoration: none; font-size: 16px; font-weight: 700; font-style: italic;
-            text-transform: uppercase; color: #ffffff; letter-spacing: 1.5px; padding: 10px 15px;
-            transition: all 0.2s ease; position: relative;
-        }
-        .nav-links a.active { color: #Da2e29; }
-        .nav-links a::after {
-            content: ''; position: absolute; width: 100%; transform: scaleX(0); height: 2px;
-            bottom: 0; left: 0; background-color: #Da2e29; transform-origin: bottom right; transition: transform 0.25s ease-out;
-        }
-        .nav-links a:hover::after, .nav-links a.active::after { transform: scaleX(1); transform-origin: bottom left; }
-        .nav-links a:hover { color: #Da2e29; }
+  document.querySelectorAll('.hl-strat-band').forEach(band => effectObserver.observe(band));
+}
 
-        /* --- TIMELINE COMPONENT GRAPHICS --- */
-        main { padding: 140px 20px 150px 20px; max-width: 1100px; margin: 0 auto; position: relative; z-index: 10; }
-        h1 { font-size: 4rem; text-transform: uppercase; font-weight: 700; font-style: italic; margin-bottom: 80px; letter-spacing: -1px; color: #ffffff; border-left: 6px solid #Da2e29; padding-left: 20px; text-shadow: 0 4px 15px rgba(0, 0, 0, 0.9); }
-        
-        .timeline-container { position: relative; margin: 60px auto; padding: 60px 0; }
-        .timeline-container::before { content: ''; position: absolute; width: 4px; background: rgba(255, 255, 255, 0.05); top: 0; bottom: 0; left: 50%; margin-left: -2px; z-index: 1; }
-        .scroll-mask-line { position: absolute; width: 4px; top: 0; bottom: 0; left: 50%; margin-left: -2px; z-index: 2; pointer-events: none; }
-        
-        .timeline-block { position: relative; width: 100%; margin-bottom: 120px; display: flex; }
-        .timeline-block:nth-child(even) { justify-content: flex-end; }
-        .timeline-block:nth-child(odd) { justify-content: flex-start; }
-        
-        .timeline-card { position: relative; width: 43%; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.05); padding: 25px; border-radius: 4px; cursor: pointer; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); z-index: 5; }
-        .timeline-card:hover { border-color: #Da2e29; background: rgba(255, 255, 255, 0.03); transform: translateY(-3px); }
-        
-        .timeline-date-node { position: absolute; left: 50%; top: 25px; transform: translateX(-50%); background-color: #000000; border: 2px solid #Da2e29; color: #ffffff; font-weight: 700; font-style: italic; font-size: 1.2rem; padding: 4px 14px; border-radius: 20px; z-index: 10; letter-spacing: 1px; box-shadow: 0 0 12px rgba(218, 46, 41, 0.4); }
-        .card-title { font-size: 1.8rem; text-transform: uppercase; font-weight: 700; font-style: italic; margin: 0 0 10px 0; color: #ffffff; display: flex; justify-content: space-between; align-items: center; }
-        .card-title::after { content: '+'; font-size: 1.5rem; color: #Da2e29; transition: transform 0.3s ease; }
-        .timeline-card.expanded .card-title::after { transform: rotate(45deg); }
-        .card-preview { font-family: Arial, sans-serif; color: #a0a0a0; line-height: 1.5; margin: 0; }
-        .card-full-content { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), margin-top 0.3s ease; font-family: Arial, sans-serif; color: #d1d5db; line-height: 1.6; }
-        
-        .timeline-card.expanded { background: rgba(218, 46, 41, 0.04); border-color: #Da2e29; }
-        .timeline-card.expanded .card-full-content { max-height: 500px; margin-top: 15px; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 15px; }
+// 3. CSS Injection for Depth Layering
+const styles = `
+  .timeline-bg-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+  }
+  
+  .hl-strat-band {
+    background: rgba(240, 242, 245, 0.6);
+    transition: background 0.4s ease, transform 0.2s ease;
+    will-change: transform, background;
+  }
 
-        @media screen and (max-width: 768px) {
-            .timeline-container::before, .scroll-mask-line { left: 30px; }
-            .timeline-date-node { left: 30px; transform: translateX(-50%); top: -45px; }
-            .timeline-block { width: 100%; margin-bottom: 80px; }
-            .timeline-block:nth-child(even), .timeline-block:nth-child(odd) { justify-content: flex-end; }
-            .timeline-card { width: 85%; }
-        }
-    </style>
-</head>
-<body>
+  /* Intersection Shadows: Applied to foreground elements crossing the bands */
+  .timeline-content-card {
+    position: relative;
+    z-index: 10; 
+    box-shadow: ${timelineConfig.effects.shadows.color} 0px 15px ${timelineConfig.effects.shadows.blurRadius};
+  }
 
-    <div class="paddock-bg"></div><div class="glow-wash"></div>
-    <div class="geo-shard shard-1" id="shard1"></div><div class="geo-shard shard-2" id="shard2"></div>
-    <div class="geo-shard shard-3" id="shard3"></div><div class="geo-shard shard-4" id="shard4"></div>
-    <div class="geo-shard shard-5" id="shard5"></div><div class="geo-shard shard-6" id="shard6"></div>
-    <div class="geo-shard shard-7" id="shard7"></div><div class="geo-shard shard-8" id="shard8"></div>
-
-    <nav class="top-navbar">
-        <div class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="about.html">About the team</a>
-            <a href="departments.html">Departments</a>
-            <a href="sponsors.html">Sponsors</a>
-            <a href="timeline.html" class="active">Timeline</a>
-            <a href="contact.html">Contact us</a>
-        </div>
-    </nav>
-
-    <main>
-        <h1>Our Legacy</h1>
-        <div class="timeline-container">
-            <div class="scroll-mask-line" id="scrollLine"></div>
-
-            <div class="timeline-block">
-                <div class="timeline-date-node">2001</div>
-                <div class="timeline-card" onclick="toggleCard(this)">
-                    <h3 class="card-title">The Spark</h3>
-                    <p class="card-preview">Initial concept drafts and garage collective forms.</p>
-                    <div class="card-full-content">Click to add deeper history details.</div>
-                </div>
-            </div>
-
-            <div class="timeline-block">
-                <div class="timeline-date-node">2002</div>
-                <div class="timeline-card" onclick="toggleCard(this)">
-                    <h3 class="card-title">First Official Entry</h3>
-                    <p class="card-preview">Registered roster and custom build specs for local series.</p>
-                    <div class="card-full-content">Insert early racing milestones here.</div>
-                </div>
-            </div>
-
-            <div class="timeline-block">
-                <div class="timeline-date-node">2014</div>
-                <div class="timeline-card" onclick="toggleCard(this)">
-                    <h3 class="card-title">The Renaissance</h3>
-                    <p class="card-preview">Team reboots under modern engineering infrastructure.</p>
-                    <div class="card-full-content">Detail your team's modern restructuring.</div>
-                </div>
-            </div>
-
-            <div class="timeline-block">
-                <div class="timeline-date-node">2015</div>
-                <div class="timeline-card" onclick="toggleCard(this)">
-                    <h3 class="card-title">Telemetry Integration</h3>
-                    <p class="card-preview">First data acquisition modules implemented in active testing.</p>
-                    <div class="card-full-content">Describe trackside computing transitions.</div>
-                </div>
-            </div>
-
-            <div class="timeline-block">
-                <div class="timeline-date-node">2016</div>
-                <div class="timeline-card" onclick="toggleCard(this)">
-                    <h3 class="card-title">Podium Breakthrough</h3>
-                    <p class="card-preview">Claimed first major silverware finish of the decade.</p>
-                    <div class="card-full-content">Document the breakout race weekend.</div>
-                </div>
-            </div>
-
-            <div class="timeline-block">
-                <div class="timeline-date-node">2017</div>
-                <div class="timeline-card" onclick="toggleCard(this)">
-                    <h3 class="card-title">Aero Package V1</h3>
-                    <p class="card-preview">Introduced advanced custom carbon downforce design mechanics.</p>
-                    <div class="card-full-content">Elaborate on fluid dynamics and testing phases.</div>
-                </div>
-            </div>
-
-            <div class="timeline-block">
-                <div class="timeline-date-node">2018</div>
-                <div class="timeline-card" onclick="toggleCard(this)">
-                    <h3 class="card-title">Fleet Expansion</h3>
-                    <p class="card-preview">Brought a secondary competitive chassis online.</p>
-                    <div class="card-full-content">Details regarding multi-car operations.</div>
-                </div>
-            </div>
-
-            <div class="timeline-block">
-                <div class="timeline-date-node">2019</div>
-                <div class="timeline-card" onclick="toggleCard(this)">
-                    <h3 class="card-title">Continental Campaign</h3>
-                    <p class="card-preview">Traveled outside baseline regional borders for premier racing formats.</p>
-                    <div class="card-full-content">Add travel maps and international ranking variants.</div>
-                </div>
-            </div>
-
-            <div class="timeline-block">
-                <div class="timeline-date-node">2022</div>
-                <div class="timeline-card" onclick="toggleCard(this)">
-                    <h3 class="card-title">Post-Era Overhaul</h3>
-                    <p class="card-preview">Returned with completely modernized computational setups.</p>
-                    <div class="card-full-content">Note engineering upgrades and hardware renovations.</div>
-                </div>
-            </div>
-
-            <div class="timeline-block">
-                <div class="timeline-date-node">2023</div>
-                <div class="timeline-card" onclick="toggleCard(this)">
-                    <h3 class="card-title">EV Shift Preparations</h3>
-                    <p class="card-preview">R&D sector opens development tracking on high-voltage battery modules.</p>
-                    <div class="card-full-content">Outline safety prototyping benchmarks.</div>
-                </div>
-            </div>
-
-            <div class="timeline-block">
-                <div class="timeline-date-node">2024</div>
-                <div class="timeline-card" onclick="toggleCard(this)">
-                    <h3 class="card-title">New Garage HQ</h3>
-                    <p class="card-preview">Moved manufacturing pipeline into dedicated workspace facilities.</p>
-                    <div class="card-full-content">Details regarding manufacturing pipelines.</div>
-                </div>
-            </div>
-
-            <div class="timeline-block">
-                <div class="timeline-date-node">2025</div>
-                <div class="timeline-card" onclick="toggleCard(this)">
-                    <h3 class="card-title">Powertrain Upgrade</h3>
-                    <p class="card-preview">Integrated high-efficiency lightweight custom gearboxes.</p>
-                    <div class="card-full-content">Performance gains metrics recorded on-track.</div>
-                </div>
-            </div>
-
-            <div class="timeline-block">
-                <div class="timeline-date-node">2026</div>
-                <div class="timeline-card" onclick="toggleCard(this)">
-                    <h3 class="card-title">Championship Domain</h3>
-                    <p class="card-preview">Secured dominant title leads on track circuits.</p>
-                    <div class="card-full-content">Write about your present day accomplishments.</div>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <script>
-        function toggleCard(card) { card.classList.toggle('expanded'); }
-
-        function runCombinedScrollEngine() {
-            const totalScrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
-            if (totalScrollableHeight <= 0) return;
-            const scrollPercent = window.scrollY / totalScrollableHeight;
-
-            // BACKGROUND LAYER CALCULATOR
-            document.getElementById('shard1').style.transform = `translateX(${scrollPercent * -45}px) skewX(${scrollPercent * 1}deg)`;
-            document.getElementById('shard2').style.transform = `translateX(${scrollPercent * 25}px)`;
-            document.getElementById('shard3').style.transform = `translateX(${scrollPercent * -15}px) translateY(${scrollPercent * 20}px)`;
-            document.getElementById('shard4').style.transform = `translateX(${scrollPercent * 35}px) scaleX(${1 + scrollPercent * 0.03})`;
-            document.getElementById('shard5').style.transform = `translateX(${scrollPercent * -60}px)`;
-            const s6 = document.getElementById('shard6');
-            s6.style.transform = `translateX(${scrollPercent * -30}px)`; s6.style.opacity = `${0.7 + (scrollPercent * 0.3)}`;
-            document.getElementById('shard7').style.transform = `translateX(${scrollPercent * 15}px)`;
-            document.getElementById('shard8').style.transform = `translateX(${scrollPercent * -75}px) skewX(${scrollPercent * -2}deg)`;
-
-            // TIMELINE TRACK REVEALER
-            const line = document.getElementById('scrollLine');
-            const container = document.querySelector('.timeline-container');
-            const rect = container.getBoundingClientRect();
-            const activePixelY = (window.innerHeight / 2) - rect.top;
-            const centerPercent = (activePixelY / rect.height) * 100;
-            
-            line.style.background = `linear-gradient(to bottom, rgba(218, 46, 41, 0) 0%, rgba(218, 46, 41, 0) ${centerPercent - 12}%, rgba(218, 46, 41, 1) ${centerPercent - 2}%, rgba(218, 46, 41, 1) ${centerPercent + 2}%, rgba(218, 46, 41, 0) ${centerPercent + 12}%, rgba(218, 46, 41, 0) 100%)`;
-        }
-
-        window.addEventListener('scroll', runCombinedScrollEngine);
-        window.addEventListener('resize', runCombinedScrollEngine);
-        document.addEventListener("DOMContentLoaded", runCombinedScrollEngine);
-    </script>
-</body>
-</html>
+  /* Bottom Glow Effect */
+  .timeline-viewport-glow {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 250px;
+    background: radial-gradient(circle at 50% 100%, ${timelineConfig.effects.luminance.glowColor}, transparent 70%);
+    z-index: 5;
+    pointer-events: none;
+  }
+  
+  .hl-strat-band.in-luminance-zone {
+    background: rgba(255, 255, 255, 0.85);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+    filter: drop-shadow(0px -5px 15px ${timelineConfig.effects.luminance.glowColor});
+  }
+`;
