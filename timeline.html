@@ -12,7 +12,7 @@
         body {
             font-family: 'Oswald', Arial, sans-serif;
             margin: 0; padding: 0; background-color: #000000; color: #ffffff;
-            letter-spacing: 0.5px; min-height: 250vh; position: relative; overflow-x: hidden;
+            letter-spacing: 0.5px; min-height: 100vh; position: relative; overflow-x: hidden;
         }
 
         /* --- HORIZONTAL STRATUM TRIANGLE BACKGROUND FRAMEWORK --- */
@@ -26,7 +26,7 @@
         .horizontal-tri-shard {
             position: absolute;
             width: 75vw;
-            height: 220px;
+            height: 240px;
             background: linear-gradient(135deg, rgba(218, 46, 41, 0.12) 0%, rgba(15, 3, 3, 0) 80%);
             /* Creates a sharp horizontal geometric wedge pointer shape */
             clip-path: polygon(0% 0%, 100% 0%, 75% 100%, 0% 100%);
@@ -71,16 +71,16 @@
         .timeline-container::before { content: ''; position: absolute; width: 4px; background: rgba(255, 255, 255, 0.05); top: 0; bottom: 0; left: 50%; margin-left: -2px; z-index: 1; }
         .scroll-mask-line { position: absolute; width: 4px; top: 0; bottom: 0; left: 50%; margin-left: -2px; z-index: 2; pointer-events: none; }
         
-        .timeline-block { position: relative; width: 100%; margin-bottom: 140px; display: flex; }
+        .timeline-block { position: relative; width: 100%; margin-bottom: 160px; display: flex; }
         .timeline-block:nth-child(even) { justify-content: flex-end; }
         .timeline-block:nth-child(odd) { justify-content: flex-start; }
         
         /* Drop shadow intersections to look elevated above horizontal layers */
         .timeline-card { 
-            position: relative; width: 43%; background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(8px); 
+            position: relative; width: 43%; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(8px); 
             border: 1px solid rgba(255, 255, 255, 0.05); padding: 25px; border-radius: 4px; cursor: pointer; 
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); z-index: 5;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.9);
         }
         .timeline-card:hover { border-color: #Da2e29; background: rgba(255, 255, 255, 0.03); transform: translateY(-3px); }
         
@@ -98,18 +98,18 @@
         .timeline-viewport-glow {
             position: fixed;
             bottom: 0; left: 0; width: 100%; height: 350px;
-            background: radial-gradient(circle at 50% 120%, rgba(218, 46, 41, 0.2) 0%, rgba(0, 0, 0, 0) 70%);
+            background: radial-gradient(circle at 50% 120%, rgba(218, 46, 41, 0.22) 0%, rgba(0, 0, 0, 0) 70%);
             z-index: -5; pointer-events: none;
         }
 
         /* High Luminance state when triangles scroll into the bottom zone */
         .horizontal-tri-shard.in-luminance-zone {
-            background: linear-gradient(135deg, rgba(218, 46, 41, 0.28) 0%, rgba(218, 46, 41, 0.02) 80%);
-            border-bottom: 1px solid rgba(218, 46, 41, 0.4);
-            filter: drop-shadow(0px 0px 25px rgba(218, 46, 41, 0.15));
+            background: linear-gradient(135deg, rgba(218, 46, 41, 0.3) 0%, rgba(218, 46, 41, 0.02) 80%);
+            border-bottom: 1px solid rgba(218, 46, 41, 0.45);
+            filter: drop-shadow(0px 0px 30px rgba(218, 46, 41, 0.2));
         }
         .horizontal-tri-shard.in-luminance-zone:nth-child(even) {
-            background: linear-gradient(225deg, rgba(218, 46, 41, 0.28) 0%, rgba(218, 46, 41, 0.02) 80%);
+            background: linear-gradient(225deg, rgba(218, 46, 41, 0.3) 0%, rgba(218, 46, 41, 0.02) 80%);
         }
 
         @media screen and (max-width: 768px) {
@@ -123,8 +123,10 @@
 </head>
 <body>
 
+    <!-- Target Bottom Bright Spot Ambient Node -->
     <div class="timeline-viewport-glow"></div>
 
+    <!-- Triangle Shard Stratum Target Container -->
     <div class="timeline-bg-container" id="bgTriContainer"></div>
 
     <nav class="top-navbar">
@@ -143,57 +145,131 @@
         <div class="timeline-container">
             <div class="scroll-mask-line" id="scrollLine"></div>
 
+            <!-- Legacy Anchors -->
             <div class="timeline-block">
                 <div class="timeline-date-node">2001</div>
                 <div class="timeline-card" onclick="toggleCard(this)">
-                    <h3 class="card-title">The Spark</h3>
+                    <h3 class="card-title">The beginning</h3>
                     <p class="card-preview">Initial concept drafts and garage collective forms.</p>
-                    <div class="card-full-content">Click to add deeper history details regarding early workshop developments.</div>
+                    <div class="card-full-content">Deeper history details regarding early workshop developments and foundational engineering principles.</div>
                 </div>
             </div>
 
             <div class="timeline-block">
                 <div class="timeline-date-node">2002</div>
                 <div class="timeline-card" onclick="toggleCard(this)">
-                    <h3 class="card-title">First Official Entry</h3>
-                    <p class="card-preview">Registered roster and custom build specs for local series.</p>
-                    <div class="card-full-content">Insert early racing milestones and championship frameworks here.</div>
+                    <h3 class="card-title">Learning the competition</h3>
+                    <p class="card-preview">Made improvements based on the previous year's entry.</p>
+                    <div class="card-full-content">Early racing milestones, tracking data, and first-generation custom hardware integrations.</div>
                 </div>
             </div>
 
             <div class="timeline-block">
                 <div class="timeline-date-node">2014</div>
                 <div class="timeline-card" onclick="toggleCard(this)">
-                    <h3 class="card-title">The Renaissance</h3>
-                    <p class="card-preview">Team reboots under modern engineering infrastructure.</p>
-                    <div class="card-full-content">Detail your team's modern restructuring and asset integration plans.</div>
+                    <h3 class="card-title">Competitors</h3>
+                    <p class="card-preview">First podiums</p>
+                    <div class="card-full-content"3rd in fuel efficiency and a CAMS Inspiring Motorsport Award.</div>
                 </div>
             </div>
+<div class="timeline-block">
 
-            <div class="timeline-block">
                 <div class="timeline-date-node">2015</div>
                 <div class="timeline-card" onclick="toggleCard(this)">
-                    <h3 class="card-title">Telemetry Integration</h3>
-                    <p class="card-preview">First data acquisition modules implemented in active testing.</p>
-                    <div class="card-full-content">Describe trackside computing transitions and logging calibrations.</div>
+                    <h3 class="card-title">The Renaissance</h3>
+                    <p class="card-preview">Team returns to the midfield.</p>
+                    <div class="card-full-content">Detailing structural modern re-organizations, dyno lab testing, and advanced simulation access.</div>
+            
                 </div>
-            </div>
-
-            <div class="timeline-block">
+<div class="timeline-block">
                 <div class="timeline-date-node">2016</div>
                 <div class="timeline-card" onclick="toggleCard(this)">
-                    <h3 class="card-title">Podium Breakthrough</h3>
-                    <p class="card-preview">Claimed first major silverware finish of the decade.</p>
-                    <div class="card-full-content">Document the breakout race weekend telemetry points and metrics.</div>
+                    <h3 class="card-title">Consistency is key</h3>
+                    <p class="card-preview">Improvements to the team and the vehicle.</p>
+                    <div class="card-full-content">Detailing structural modern re-organizations, dyno lab testing, and advanced simulation access.</div>
+                </div>
+
+    <div class="timeline-block">
+                <div class="timeline-date-node">2017</div>
+                <div class="timeline-card" onclick="toggleCard(this)">
+                    <h3 class="card-title">The Future</h3>
+                    <p class="card-preview">Our first electric vehicle hits the track.</p>
+                    <div class="card-full-content">The team switches from combustion engines to fully electric systems.</div>
+                </div>
+        
+<div class="timeline-block">
+                <div class="timeline-date-node">2018</div>
+                <div class="timeline-card" onclick="toggleCard(this)">
+                    <h3 class="card-title">The Rebuild</h3>
+                    <p class="card-preview">Team reboots under modern engineering infrastructure.</p>
+                    <div class="card-full-content">Detailing structural modern re-organizations, dyno lab testing, and advanced simulation access.</div>
+                </div>
+
+            </div>
+            </div>
+            </div>
+            </div>
+            <!-- Modern Era -->
+            <div class="timeline-block">
+                <div class="timeline-date-node">2020</div>
+                <div class="timeline-card" onclick="toggleCard(this)">
+                    <h3 class="card-title">Sim-Ops Expansion</h3>
+                    <p class="card-preview">Transitioned testing parameters into high-fidelity custom virtual environments.</p>
+                    <div class="card-full-content">Deployed synthetic driver-in-the-loop validation arrays to sustain vehicle dynamic developments remotely.</div>
                 </div>
             </div>
 
             <div class="timeline-block">
-                <div class="timeline-date-node">2017</div>
+                <div class="timeline-date-node">2021</div>
                 <div class="timeline-card" onclick="toggleCard(this)">
-                    <h3 class="card-title">Aero Package V1</h3>
-                    <p class="card-preview">Introduced advanced custom carbon downforce design mechanics.</p>
-                    <div class="card-full-content">Elaborate on fluid dynamics, drag models, and wind tunnel testing phases.</div>
+                    <h3 class="card-title">E-Powertrain R&D</h3>
+                    <p class="card-preview">Inaugurated dedicated research lab for high-voltage energy recovery applications.</p>
+                    <div class="card-full-content">Explored predictive thermal mapping, extreme cell degradation models, and custom inverter code.</div>
+                </div>
+            </div>
+
+            <div class="timeline-block">
+                <div class="timeline-date-node">2022</div>
+                <div class="timeline-card" onclick="toggleCard(this)">
+                    <h3 class="card-title">Chassis Optimization</h3>
+                    <p class="card-preview">Introduced topology-optimized lightweight alloys to the primary monocoque layout.</p>
+                    <div class="card-full-content">Shaved structural unsprung mass while increasing overall torsional stiffness thresholds by 14%.</div>
+                </div>
+            </div>
+
+            <div class="timeline-block">
+                <div class="timeline-date-node">2023</div>
+                <div class="timeline-card" onclick="toggleCard(this)">
+                    <h3 class="card-title">Trackside Analytics</h3>
+                    <p class="card-preview">Deployed real-time predictive modeling software directly to the pit wall array.</p>
+                    <div class="card-full-content">Automated live tire degradation forecasting and optimal dynamic fuel-mapping strategies on the fly.</div>
+                </div>
+            </div>
+
+            <div class="timeline-block">
+                <div class="timeline-date-node">2024</div>
+                <div class="timeline-card" onclick="toggleCard(this)">
+                    <h3 class="card-title">Active Aero Integration</h3>
+                    <p class="card-preview">Engineered dynamic drag-reduction surfaces synchronized to braking systems.</p>
+                    <div class="card-full-content">Designed localized hydraulic actuation profiles yielding optimized corner-entry downforce adjustments.</div>
+                </div>
+            </div>
+
+            <div class="timeline-block">
+                <div class="timeline-date-node">2025</div>
+                <div class="timeline-card" onclick="toggleCard(this)">
+                    <h3 class="card-title">Continental Domination</h3>
+                    <p class="card-preview">Secured consecutive top-tier podium positions across multi-circuit challenges.</p>
+                    <div class="card-full-content">Validated robust platform efficiency, setting class record sector tracking sequences globally.</div>
+                </div>
+            </div>
+
+            <div class="timeline-block">
+                <div class="timeline-date-node">2026</div>
+                <div class="timeline-card" onclick="toggleCard(this)">
+                    <h3 class="card-title">The Next Paradigm</h3>
+                    <p class="card-preview">Unveiling the fully unified hyper-performance architecture project.</p>
+                    <div class="card-full-content">Integrating advanced predictive AI handling dynamics with a proprietary solid-state power cell core design.</div>
                 </div>
             </div>
         </div>
@@ -204,36 +280,41 @@
 
         document.addEventListener("DOMContentLoaded", () => {
             const container = document.getElementById('bgTriContainer');
-            const totalShards = 6;
             const shardElements = [];
 
-            // 1. Build & Disperse the Spacious Horizontal Triangle Fragments
-            const docHeight = document.documentElement.scrollHeight;
-            const horizontalGapInterval = docHeight / totalShards;
+            // Dynamic Generator: Matches the background triangle count to the growing content depth automatically
+            function generateStrataTriangles() {
+                container.innerHTML = '';
+                shardElements.length = 0;
 
-            for (let i = 0; i < totalShards; i++) {
-                const shard = document.createElement('div');
-                shard.classList.add('horizontal-tri-shard');
-                
-                // Force a fixed distribution depth setting broad margins so shapes NEVER touch
-                const baseTop = (i * horizontalGapInterval) + 120;
-                shard.style.top = `${baseTop}px`;
-                
-                container.appendChild(shard);
-                shardElements.push({
-                    el: shard,
-                    initialTop: baseTop,
-                    speedFactor: 0.2 + (i % 2 * 0.15) // Dynamic parallax drift horizontal velocities
-                });
+                const docHeight = document.documentElement.scrollHeight;
+                // Roughly one massive detached shard cluster for every 1.5 timeline cards
+                const totalShards = Math.max(7, Math.floor(docHeight / 480)); 
+                const horizontalGapInterval = docHeight / totalShards;
+
+                for (let i = 0; i < totalShards; i++) {
+                    const shard = document.createElement('div');
+                    shard.classList.add('horizontal-tri-shard');
+                    
+                    // Ensures broad margins so shapes completely float and NEVER touch
+                    const baseTop = (i * horizontalGapInterval) + 140;
+                    shard.style.top = `${baseTop}px`;
+                    
+                    container.appendChild(shard);
+                    shardElements.push({
+                        el: shard,
+                        initialTop: baseTop,
+                        speedFactor: 0.18 + (i % 3 * 0.12) // Varied horizontal velocity layers
+                    });
+                }
             }
 
-            // 2. Multi-Channel Scroll Core Handler Engine
+            // Multi-Channel Scroll Core Handler Engine
             function executeUnifiedScrollUpdates() {
                 const currentScrollY = window.scrollY;
                 const totalScrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
                 if (totalScrollableHeight <= 0) return;
                 
-                const scrollPercent = currentScrollY / totalScrollableHeight;
                 const viewBottomThreshold = window.innerHeight * 0.65;
 
                 // A. PARALLAX HORIZONTAL WEDGES DRIFT & ZONE DETECTOR
@@ -259,12 +340,27 @@
                 const activeCenterPixel = (window.innerHeight / 2) - containerRect.top;
                 const activePointPercent = (activeCenterPixel / containerRect.height) * 100;
                 
-                trackingLine.style.background = `linear-gradient(to bottom, rgba(218, 46, 41, 0) 0%, rgba(218, 46, 41, 0) ${activePointPercent - 12}%, rgba(218, 46, 41, 1) ${activePointPercent - 2}%, rgba(218, 46, 41, 1) ${activePointPercent + 2}%, rgba(218, 46, 41, 0) ${activePointPercent + 12}%, rgba(218, 46, 41, 0) 100%)`;
+                trackingLine.style.background = `linear-gradient(to bottom, rgba(218, 46, 41, 0) 0%, rgba(218, 46, 41, 0) ${activePointPercent - 8}%, rgba(218, 46, 41, 1) ${activePointPercent - 1.5}%, rgba(218, 46, 41, 1) ${activePointPercent + 1.5}%, rgba(218, 46, 41, 0) ${activePointPercent + 8}%, rgba(218, 46, 41, 0) 100%)`;
             }
 
+            // Initial Build
+            generateStrataTriangles();
+            executeUnifiedScrollUpdates();
+
             window.addEventListener('scroll', executeUnifiedScrollUpdates);
-            window.addEventListener('resize', executeUnifiedScrollUpdates);
-            executeUnifiedScrollUpdates(); // Initial initialization calculation parameters pass
+            window.addEventListener('resize', () => {
+                generateStrataTriangles();
+                executeUnifiedScrollUpdates();
+            });
+
+            // Re-calculate background distribution mapping dynamically if user expands items
+            document.querySelectorAll('.timeline-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    setTimeout(() => {
+                        executeUnifiedScrollUpdates();
+                    }, 450); // Fires window alignment immediately after transition completes
+                });
+            });
         });
     </script>
 </body>
