@@ -1,0 +1,46 @@
+name: Deploy Pages
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: publish
+  cancel-in-progress: false
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.pages-deploy.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - name: Process
+        env:
+          A2674C: ${{ secrets.A2674C }}
+          B89011: ${{ secrets.B89011 }}
+        run: |
+          python3 -c "
+          import sys, os, pathlib
+          pairs = [('A2674C', '<!-- 959bfc5b143fabaefed857ac214b0a6d94 -->'), ('B89011', '<!-- 312e18b3e9cc716400ef09befc4f564e -->')]
+          path = pathlib.Path('index.html')
+          data = path.read_text(encoding='utf-8')
+          result = data
+          for key, mark in pairs:
+              token = os.environ.get(key, '')
+              if token:
+                  result = result.replace(mark, token)
+          if result == data and any(os.environ.get(k, '') for k, _ in pairs):
+              sys.exit(1)
+          if result != data:
+              path.write_text(result, encoding='utf-8')
+          "
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - id: pages-deploy
+        uses: actions/deploy-pages@v4
